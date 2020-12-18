@@ -1,60 +1,58 @@
 import React, { Component } from "react";
 import API from "../api/API";
 import Table from 'react-bootstrap/Table';
+import Tablerow from "../components/Tablerow"
 
 class Usertable extends Component {
-    state = {
-      search: "",
-      results: [{}]
-    };
+  state = {
+    search: "",
+    results: []
+  };
 
-    componentDidMount() {
-        this.search();
-      }
-    
-      search = () => {
-        API.search()
-          .then(res => this.setState({ results: res.data.results }))
-          .catch(err => console.log(err));
-      };
-    
+  componentDidMount() {
+    console.log("componentDidMount")
+    this.search();
+  }
 
-    render() {
-        return (
-          <div>
-              <Table striped bordered hover>
-  <thead>
-    <tr>
-      <th>#</th>
-      <th>First Name</th>
-      <th>Last Name</th>
-      <th>Username</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>1</td>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <td>2</td>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <td>3</td>
-      <td colSpan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-  </tbody>
-</Table>
-          </div>
-        );
-    }
-    
+  search = () => {
+    API.search()
+      .then(res => {
+        console.log(res.data.results)
+        this.setState({ results: res.data.results })})
+      .catch(err => console.log(err));
+  };s
+
+
+  render() {
+    return (
+      <div className = "container">
+        <Table striped bordered hover>
+          <thead>
+            <tr>
+              <th>Avatar</th>
+              <th>First Name</th>
+              <th>Last Name</th>
+              <th>Email</th>
+              <th>Phone</th>
+            </tr>
+          </thead>
+          <tbody>
+            {this.state.results.map(user => (
+              <Tablerow
+              key = {user.login.uuid}
+              avatar = {user.picture.thumbnail}
+              firstname = {user.name.first}
+              lastname = {user.name.last}
+              email = {user.email}
+              phone = {user.phone}
+              />
+            ))}
+          </tbody>
+        </Table>
+      </div>
+    );
+  }
+
 };
 
 export default Usertable;
